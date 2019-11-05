@@ -3,7 +3,7 @@ project(nhf2)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(nhf2 main.cpp)
+add_executable(nhf2 main.cpp Node.h sdl_init.cpp sdl_init.h Voronoi.cpp Voronoi.h)
 
 INCLUDE(FindPkgConfig)
 
