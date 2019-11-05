@@ -36,7 +36,7 @@ bool init() {
         success = false;
     }
 
-    // The render conatined by the window
+    // The render contained by the window
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
     if (renderer == NULL) {
         SDL_Log("Renderer couldn't be created: %s", SDL_GetError());
@@ -56,47 +56,36 @@ int main(int argc, char *argv[]) {
 
     // Event loop
     bool quit = false;
-    bool click = false;
-    int prevx = 0;
-    int prevy = 0;
+
+
+    bool start_line = true;
+    int start_x = 0;
+    int start_y = 0;
+
     // Event handler
     SDL_Event event;
     while (!quit) {
-
         // Fill up event with event.motion.x and event.motion.y
         SDL_WaitEvent(&event);
-
-        bool drew = false;
-
         switch (event.type) {
             /* Mouse click */
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     // Left button click
-                    click = true;
-                    prevx = event.button.x;
-                    prevy = event.button.y;
+                    filledCircleRGBA(renderer, event.motion.x, event.motion.y, 5, 255, 0, 0, 255);
+                    SDL_RenderPresent(renderer);
                 } else if (event.button.button == SDL_BUTTON_RIGHT) {
-                    boxColor(renderer, 0, 0, 439, 359, 0x000000FF);
-                    drew = true;
+                    //Right button click
+                    if (start_line) {
+                        start_x = event.motion.x;
+                        start_y = event.motion.y;
+                        start_line = false;
+                    } else {
+                        lineRGBA(renderer, start_x, start_y, event.motion.x, event.motion.y, 255, 255, 255, 255);
+                        SDL_RenderPresent(renderer);
+                        start_line = true;
+                    }
                 }
-                break;
-                /* Releasing mouse button */
-            case SDL_MOUSEBUTTONUP:
-                if (event.button.button == SDL_BUTTON_LEFT) {
-                    click = false;
-                }
-                break;
-                /* Mouse gesture */
-            case SDL_MOUSEMOTION:
-                if (click) {
-                    aalineColor(renderer, prevx, prevy,
-                                event.motion.x, event.motion.y, 0xFFFFFFFF);
-                    drew = true;
-                }
-                /* For next gesture */
-                prevx = event.motion.x;
-                prevy = event.motion.y;
                 break;
                 /* Closing the window */
             case SDL_QUIT:
@@ -104,8 +93,7 @@ int main(int argc, char *argv[]) {
                 break;
         }
 
-        if (drew)
-            SDL_RenderPresent(renderer);
+
     }
 
     // Close SDL
