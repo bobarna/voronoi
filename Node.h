@@ -4,8 +4,7 @@
 #include <cstddef>
 #include <cmath>
 #include <SDL2/SDL.h>
-#include <time.h>
-#include <stdlib.h>
+#include <random>
 
 struct Coord {
     int x;
@@ -31,10 +30,12 @@ struct Color {
             r(r), g(g), b(b), a(a) {}
 
     Color() {
-        srand(time(nullptr));
-        r = (rand() % 255);
-        g = (rand() % 255);
-        b = (rand() % 255);
+        std::random_device rand;
+        std::mt19937 rng(rand());
+        std::uniform_int_distribution<std::mt19937::result_type> dist6(0, 255);
+        r = (dist6(rng));
+        g = (dist6(rng));
+        b = (dist6(rng));
         a = 255;
     }
 };

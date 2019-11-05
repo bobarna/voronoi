@@ -16,7 +16,10 @@ public:
     void color(SDL_Renderer *renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGHT);
 
     void addNode(int x, int y) {
-        nodes.emplace_back(x, y);
+        nodes.emplace_back(Node(x, y));
+        /*if(nodes.size() > 20) {
+            nodes.erase(nodes.begin());
+        }*/
     }
 
     void drawNodes(SDL_Renderer **renderer) {

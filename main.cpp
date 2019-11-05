@@ -2,6 +2,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <stdlib.h>
 #include <vector>
+#include <iostream>
 
 #include "Node.h"
 #include "sdl_init.h"
@@ -35,7 +36,6 @@ int main(int argc, char *argv[]) {
     int start_y = 0;
 
     Voronoi voronoi;
-    std::vector<Node> nodes;
 
     // Event handler
     SDL_Event event;
@@ -55,15 +55,13 @@ int main(int argc, char *argv[]) {
                     SDL_RenderPresent(renderer);
                 } else if (event.button.button == SDL_BUTTON_RIGHT) {
                     //Right button click
-                    if (start_line) {
-                        start_x = event.motion.x;
-                        start_y = event.motion.y;
-                        start_line = false;
-                    } else {
-                        lineRGBA(renderer, start_x, start_y, event.motion.x, event.motion.y, 255, 255, 255, 255);
-                        SDL_RenderPresent(renderer);
-                        start_line = true;
-                    }
+                    SDL_Surface *out_surface = SDL_CreateRGBSurfaceWithFormat(0, WINDOW_WIDTH, WINDOW_HEIGHT, 32,
+                                                                              SDL_PIXELFORMAT_ARGB8888);
+                    SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, out_surface->pixels,
+                                         out_surface->pitch);
+                    SDL_SaveBMP(out_surface, "voronoi.bmp");
+                    SDL_FreeSurface(out_surface);
+                    std::cout << "screenshot saved successfully " << std::endl;
                 }
                 break;
                 /* Closing the window */
