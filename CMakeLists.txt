@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
-project(nhf2)
+project(voronoi)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(nhf2 main.cpp Node.h sdl_init.cpp sdl_init.h Voronoi.cpp Voronoi.h)
+add_executable(voronoi main.cpp Node.h sdl_stuff.cpp sdl_stuff.h Voronoi.cpp Voronoi.h)
 
 INCLUDE(FindPkgConfig)
 

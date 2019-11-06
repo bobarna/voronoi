@@ -1,5 +1,5 @@
-#ifndef NHF2_NODE_H
-#define NHF2_NODE_H
+#ifndef NODE_H
+#define NODE_H
 
 #include <cstddef>
 #include <cmath>
@@ -54,4 +54,4 @@ struct Node : public Coord {
 };
 
 
-#endif //NHF2_NODE_H
+#endif

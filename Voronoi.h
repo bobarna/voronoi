@@ -1,5 +1,5 @@
-#ifndef NHF2_VORONOI_H
-#define NHF2_VORONOI_H
+#ifndef VORONOI_H
+#define VORONOI_H
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
@@ -9,24 +9,45 @@
 
 class Voronoi {
     std::vector<Node> nodes;
-
     Color getClosest(int x, int y);
+
+    bool drawNodesOn = true;
+    bool capNodes = true;
 
 public:
     void color(SDL_Renderer *renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGHT);
 
     void addNode(int x, int y) {
         nodes.emplace_back(Node(x, y));
-        /*if(nodes.size() > 20) {
+        if (nodes.size() > 16 && capNodes) {
             nodes.erase(nodes.begin());
-        }*/
+        }
     }
 
-    void drawNodes(SDL_Renderer **renderer) {
+    void toggleDrawNodes() {
+        drawNodesOn = !drawNodesOn;
+    }
+
+    void toggleCapNodes() {
+        while (nodes.size() > 16)
+            nodes.erase(nodes.begin());
+
+        capNodes = !capNodes;
+    }
+
+    void drawNodes(SDL_Renderer *renderer) {
+        if (!drawNodesOn) return;
+        if (nodes.empty()) return;
         for (auto n: nodes)
-            n.draw(*renderer);
+            n.draw(renderer);
+    }
+
+    void shuffleNodes(const int WINDOW_WIDTH, const int WINDOW_HEIGHT);
+
+    void clear() {
+        nodes.clear();
     }
 };
 
 
-#endif //NHF2_VORONOI_H
+#endif
