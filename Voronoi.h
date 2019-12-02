@@ -9,13 +9,13 @@
 
 class Voronoi {
     std::vector<Node> nodes;
-    Color getClosest(int x, int y);
+
 
     bool drawNodesOn = true;
     bool capNodes = true;
 
 public:
-    void color(SDL_Renderer *renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGHT);
+    Color getClosest(int x, int y);
 
     void addNode(int x, int y) {
         nodes.emplace_back(Node(x, y));
@@ -40,12 +40,17 @@ public:
         if (nodes.empty()) return;
         for (auto n: nodes)
             n.draw(renderer);
+        SDL_RenderPresent(renderer);
     }
 
     void shuffleNodes(const int WINDOW_WIDTH, const int WINDOW_HEIGHT);
 
     void clear() {
         nodes.clear();
+    }
+
+    bool empty() {
+        return nodes.empty();
     }
 };
 

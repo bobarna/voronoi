@@ -11,10 +11,6 @@ struct Coord {
     int y;
 
     Coord(int x, int y) : x(x), y(y) {}
-
-    double dist(Coord other) {
-        return sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y));
-    }
 };
 
 struct Color {
@@ -40,16 +36,21 @@ struct Color {
     }
 };
 
-struct Node : public Coord {
+struct Node {
+    Coord pos;
     Color color;
     size_t r = 5;
 
-    Node(int x, int y) : Coord(x, y), color() { r = 5; }
+    Node(int x, int y) : pos(x, y), color() { r = 5; }
 
     Node(int x, int y, int r) : Node(x, y) { this->r = r; }
 
     void draw(SDL_Renderer *renderer) {
-        filledCircleRGBA(renderer, x, y, r, 100, 100, 100, 255);
+        filledCircleRGBA(renderer, pos.x, pos.y, r, 100, 100, 100, 255);
+    }
+
+    double dist(Coord other) {
+        return sqrt((other.x - pos.x) * (other.x - pos.x) + (other.y - pos.y) * (other.y - pos.y));
     }
 };
 

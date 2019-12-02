@@ -3,59 +3,6 @@
 #include "sdl_stuff.h"
 
 
-bool
-init(const int WINDOW_WIDTH, const int WINDOW_HEIGHT, const char *FONT, SDL_Window **window, SDL_Renderer **renderer,
-     TTF_Font **font) {
-// Initialization flag
-    bool success = true;
-
-// SDL initialization, opening the window
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-        SDL_Log("SDL can't be started: %s", SDL_GetError());
-        success = false;
-    }
-
-// Creating the window, we'll be rendering to
-    *window = SDL_CreateWindow("Voronoi Partitioner", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH,
-                               WINDOW_HEIGHT, 0);
-    if (*window == nullptr) {
-        SDL_Log("Window couldn't be created: %s", SDL_GetError());
-        success = false;
-    }
-
-// The render contained by the window
-    *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_SOFTWARE);
-    if (*renderer == nullptr) {
-        SDL_Log("Renderer couldn't be created: %s", SDL_GetError());
-        success = false;
-    }
-
-    TTF_Init();
-    *font = TTF_OpenFont(FONT, 24);
-    if (*font == nullptr) {
-        SDL_Log("Font couldn't be loaded! %s\n", TTF_GetError());
-        exit(1);
-    }
-
-    return success;
-}
-
-void sdl_close(SDL_Window **window, SDL_Renderer **renderer, TTF_Font **font) {
-    SDL_DestroyRenderer(*renderer);
-    *renderer = nullptr;
-
-    SDL_DestroyWindow(*window);
-    *window = nullptr;
-
-    TTF_CloseFont(*font);
-    *font = nullptr;
-
-    SDL_StopTextInput();
-
-    SDL_Quit();
-}
-
-
 std::string getInput(SDL_Renderer *renderer, TTF_Font *font, const int WINDOW_HEIGHT, const int WINDOW_WIDTH) {
     std::string commandText = "";
     SDL_Event event;
@@ -132,4 +79,19 @@ void displayHelpWindow(SDL_Renderer *renderer, TTF_Font *font, const int WINDOW_
 
 
     SDL_RenderPresent(renderer);
+}
+
+
+int SDLWrapper::renderClear() {
+    return SDL_RenderClear(renderer);
+}
+
+void SDLWrapper::fillVoronoi(Voronoi *voronoi) {
+    if (voronoi->empty()) return;
+    for (int x = 0; x < WINDOW_WIDTH; x++) {
+        for (int y = 0; y < WINDOW_HEIGHT; y++) {
+            Color curr = voronoi->getClosest(x, y);
+            pixelRGBA(renderer, x, y, curr.r, curr.g, curr.b, curr.a);
+        }
+    }
 }
